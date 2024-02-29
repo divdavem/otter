@@ -40,7 +40,7 @@ function ngAddFn(options: NgAddSchematicsSchema): Rule {
       const dependencies = depsInfo.o3rPeerDeps.reduce((acc, dep) => {
         acc[dep] = {
           inManifest: [{
-            range: `~${depsInfo.packageVersion}`,
+            range: `${options.exactO3rVersion ? '' : '~'}${depsInfo.packageVersion}`,
             types: getProjectNewDependenciesTypes(workspaceProject)
           }]
         };

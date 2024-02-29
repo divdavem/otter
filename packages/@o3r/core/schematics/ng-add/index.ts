@@ -26,6 +26,7 @@ const o3rDevDependencies = [
 function ngAddFn(options: NgAddSchematicsSchema): Rule {
   const corePackageJsonContent = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', '..', 'package.json'), {encoding: 'utf-8'})) as PackageJson;
   const o3rCoreVersion = corePackageJsonContent.version!;
+  const o3rVersionRange = options.exactO3rVersion ? o3rCoreVersion : `~${o3rCoreVersion}`;
 
   return (): Rule => {
     const dependenciesSetupConfig: SetupDependenciesOptions = {
@@ -33,7 +34,7 @@ function ngAddFn(options: NgAddSchematicsSchema): Rule {
       dependencies: o3rDevDependencies.reduce((acc, dep) => {
         acc[dep] = {
           inManifest: [{
-            range: `~${o3rCoreVersion}`,
+            range: o3rVersionRange,
             types: [NodeDependencyType.Dev]
           }]
         };
@@ -46,7 +47,7 @@ function ngAddFn(options: NgAddSchematicsSchema): Rule {
       dependenciesSetupConfig.dependencies[workspacePackageName] = {
         toWorkspaceOnly: true,
         inManifest: [{
-          range: `~${o3rCoreVersion}`,
+          range: o3rVersionRange,
           types: [NodeDependencyType.Default]
         }]
       };

@@ -48,7 +48,7 @@ export const prepareProject = (options: NgAddSchematicsSchema): Rule => {
     const dependencies = [...internalPackagesToInstallWithNgAdd, ...dependenciesToInstall].reduce((acc, dep) => {
       acc[dep] = {
         inManifest: [{
-          range: `~${depsInfo.packageVersion}`,
+          range: `${options.exactO3rVersion ? '' : '~'}${depsInfo.packageVersion}`,
           types: [NodeDependencyType.Default]
         }]
       };

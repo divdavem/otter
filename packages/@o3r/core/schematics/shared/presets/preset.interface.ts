@@ -12,6 +12,9 @@ export interface PresetOptions {
 
   /** Option to provide to the dependency setup helper */
   dependenciesSetupConfig?: SetupDependenciesOptions;
+
+  /** Use a pinned version number for o3r packages */
+  exactO3rVersion?: boolean;
 }
 
 /** Definition of the modules preset */
