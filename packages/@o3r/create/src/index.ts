@@ -101,6 +101,7 @@ if (packageManagerEnv && ['npm', 'yarn'].includes(packageManagerEnv)) {
   defaultPackageManager = packageManagerEnv;
 }
 const packageManager = argv['package-manager'] || defaultPackageManager;
+const exactO3rVersion = !!argv['exact-o3r-version'] || false;
 
 if (argv._.length === 0) {
   // eslint-disable-next-line no-console
@@ -171,6 +172,21 @@ const prepareWorkspace = (relativeDirectory = '.', projectPackageManager = 'npm'
   mandatoryDependencies.forEach((dep) => {
     packageJson.devDependencies![dep] = dependencies?.[dep] || devDependencies?.[dep] || 'latest';
   });
+  if (exactO3rVersion) {
+    const o3rPackages = ['@o3r/core', '@o3r/schematics', '@o3r/workspace', '@o3r/telemetry'];
+    const resolutions: PackageJson['resolutions'] = {};
+    o3rPackages.forEach((pkg) => {
+      if (packageJson.devDependencies![pkg]) {
+        packageJson.devDependencies![pkg] = version;
+      }
+      resolutions[pkg] = version;
+    });
+    if (projectPackageManager === 'yarn') {
+      packageJson.resolutions = resolutions;
+    } else {
+      (packageJson as any).overrides = resolutions;
+    }
+  }
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   if (projectPackageManager === 'yarn') {
